@@ -1,0 +1,7 @@
+{
+  "name": "AutoManager Pro - Sistema de Gestão de Concessionária",
+  "description": "Uma plataforma completa para gerenciamento de estoque de veículos, clientes, vendas e relatórios financeiros, com dashboard analítico e controle de acesso.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
