@@ -1,20 +1,38 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Aula Loja Carro - Estrutura Front + Back
 
-# Run and deploy your AI Studio app
+Projeto reorganizado em duas aplicações:
 
-This contains everything you need to run your app locally.
+- `front/`: aplicação React (Vite) com interface de gestão da concessionária.
+- `back/`: API Node.js + Prisma para integração com PostgreSQL.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1U9wPTbThFhqQhUYf44e0RklkRCfPFaOr
+## Banco de dados (PostgreSQL com Docker)
 
-## Run Locally
+Na raiz do projeto:
 
-**Prerequisites:**  Node.js
+```bash
+docker compose up -d
+```
 
+## Backend
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+```bash
+cd back
+cp .env.example .env
+npm install
+npm run prisma:generate
+npm run prisma:migrate -- --name init
+npm run seed
+npm run dev
+```
+
+API disponível em `http://localhost:3001`.
+
+## Frontend
+
+```bash
+cd front
+npm install
+npm run dev
+```
+
+Frontend disponível em `http://localhost:5173`.

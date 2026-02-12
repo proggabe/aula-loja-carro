@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum VehicleStatus {
+  AVAILABLE
+  SOLD
+  RESERVED
+}
+
+enum FuelType {
+  GASOLINE
+  ETHANOL
+  FLEX
+  DIESEL
+  ELECTRIC
+  HYBRID
+}
+
+enum SaleStatus {
+  COMPLETED
+  CANCELLED
+  PENDING
+}
+
+enum UserRole {
+  ADMIN
+  SELLER
+  FINANCE
+}
+
+model Vehicle {
+  id           String        @id @default(cuid())
+  brand        String
+  model        String
+  year         Int
+  color        String
+  plate        String        @unique
+  chassis      String        @unique
+  mileage      Int
+  fuelType     FuelType
+  price        Decimal       @db.Decimal(12, 2)
+  status       VehicleStatus @default(AVAILABLE)
+  observations String?
+  entryDate    DateTime
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  photos       VehiclePhoto[]
+  sales        Sale[]
+}
+
+model VehiclePhoto {
+  id        String   @id @default(cuid())
+  url       String
+  vehicleId String
+  createdAt DateTime @default(now())
+  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+}
+
+model Client {
+  id           String   @id @default(cuid())
+  name         String
+  document     String   @unique
+  birthDate    DateTime?
+  phone        String?
+  email        String?  @unique
+  address      String?
+  city         String?
+  state        String?
+  observations String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  sales        Sale[]
+}
+
+model Sale {
+  id            String     @id @default(cuid())
+  clientId      String
+  vehicleId     String
+  date          DateTime
+  value         Decimal    @db.Decimal(12, 2)
+  paymentMethod String
+  sellerName    String
+  status        SaleStatus @default(PENDING)
+  observations  String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  client        Client     @relation(fields: [clientId], references: [id])
+  vehicle       Vehicle    @relation(fields: [vehicleId], references: [id])
+
+  @@index([clientId])
+  @@index([vehicleId])
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  role      UserRole @default(SELLER)
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
